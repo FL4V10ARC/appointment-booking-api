@@ -1,5 +1,7 @@
 package com.flavio.appointment_booking_api.service;
 
+import com.flavio.appointment_booking_api.dto.auth.AuthResponse;
+import com.flavio.appointment_booking_api.dto.auth.LoginRequest;
 import com.flavio.appointment_booking_api.dto.auth.RegisterRequest;
 import com.flavio.appointment_booking_api.entity.User;
 import com.flavio.appointment_booking_api.enums.Role;
@@ -20,8 +22,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(RegisterRequest request) {
-
+    public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new RuntimeException("Email already registered");
         }
@@ -34,6 +35,33 @@ public class UserService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return new AuthResponse(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail(),
+                savedUser.getRole().name(),
+                "User registered successfully"
+        );
+    }
+
+    public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+        boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPassword());
+
+        if (!passwordMatches) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        return new AuthResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole().name(),
+                "Login successful"
+        );
     }
 }

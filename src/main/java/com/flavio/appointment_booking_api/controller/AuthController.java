@@ -1,7 +1,8 @@
 package com.flavio.appointment_booking_api.controller;
 
+import com.flavio.appointment_booking_api.dto.auth.AuthResponse;
+import com.flavio.appointment_booking_api.dto.auth.LoginRequest;
 import com.flavio.appointment_booking_api.dto.auth.RegisterRequest;
-import com.flavio.appointment_booking_api.entity.User;
 import com.flavio.appointment_booking_api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,12 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public User register(@RequestBody @Valid RegisterRequest request) {
+    public AuthResponse register(@RequestBody @Valid RegisterRequest request) {
         return userService.register(request);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody @Valid LoginRequest request) {
+        return userService.login(request);
     }
 }
