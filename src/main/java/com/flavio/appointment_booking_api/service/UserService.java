@@ -5,6 +5,7 @@ import com.flavio.appointment_booking_api.dto.auth.LoginRequest;
 import com.flavio.appointment_booking_api.dto.auth.RegisterRequest;
 import com.flavio.appointment_booking_api.entity.User;
 import com.flavio.appointment_booking_api.enums.Role;
+import com.flavio.appointment_booking_api.exception.BusinessException;
 import com.flavio.appointment_booking_api.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UserService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("Email already registered");
+            throw new BusinessException("Email already registered");
         }
 
         User user = User.builder()
@@ -48,12 +49,12 @@ public class UserService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new BusinessException("Invalid email or password"));
 
         boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPassword());
 
         if (!passwordMatches) {
-            throw new RuntimeException("Invalid email or password");
+            throw new BusinessException("Invalid email or password");
         }
 
         return new AuthResponse(
