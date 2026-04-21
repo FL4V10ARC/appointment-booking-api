@@ -14,4 +14,13 @@ public class TestController {
     public String secure() {
         return "Access granted!";
     }
+     @GetMapping("/client")
+    public String client() {
+        return "Hello, CLIENT!";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "Hello, ADMIN!";
+    }
 }
