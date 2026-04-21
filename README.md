@@ -1,5 +1,5 @@
-[![PT](https://img.shields.io/badge/🇧🇷-Português-2ea44f?style=for-the-badge)](./README.md)
-[![EN](https://img.shields.io/badge/🇺🇸-English-0A66C2?style=for-the-badge)](./README.en.md)
+[![PT](https://img.shields.io/badge/🇧🇷-Português-2ea44f?style=for-the-badge)](./README.pt.md)
+[![EN](https://img.shields.io/badge/🇺🇸-English-0A66C2?style=for-the-badge)](./README.md)
 
 ---
 
