@@ -2,6 +2,7 @@ package com.flavio.appointment_booking_api.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,12 +23,17 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
+           .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/test", "/auth/**").permitAll()
-                .requestMatchers("/client").hasRole("CLIENT")
-                .requestMatchers("/admin").hasRole("ADMIN")
+                // CLIENT pode criar
+                .requestMatchers(HttpMethod.POST, "/appointments").hasRole("CLIENT")
+                // CLIENT vê os próprios
+                .requestMatchers("/appointments/me").hasRole("CLIENT")
+                 // ADMIN vê todos
+                .requestMatchers(HttpMethod.GET, "/appointments").hasRole("ADMIN")
+                 // qualquer outra precisa estar autenticado
                 .anyRequest().authenticated()
-            )
+)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
