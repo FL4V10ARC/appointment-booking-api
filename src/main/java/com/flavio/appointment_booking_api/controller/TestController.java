@@ -10,4 +10,8 @@ public class TestController {
     public String test() {
         return "API is running!";
     }
+    @GetMapping("/secure")
+    public String secure() {
+        return "Access granted!";
+    }
 }
