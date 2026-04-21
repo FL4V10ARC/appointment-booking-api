@@ -1,0 +1,6 @@
+spring.datasource.url=jdbc:postgresql://localhost:5432/appointment_booking
+spring.datasource.username=postgres
+spring.datasource.password=SUA_SENHA_AQUI
+
+jwt.secret=SEU_SECRET_AQUI
+jwt.expiration=86400000
