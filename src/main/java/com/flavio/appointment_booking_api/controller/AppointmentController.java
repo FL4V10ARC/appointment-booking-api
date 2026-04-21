@@ -3,13 +3,18 @@ package com.flavio.appointment_booking_api.controller;
 import com.flavio.appointment_booking_api.dto.appointment.AppointmentResponse;
 import com.flavio.appointment_booking_api.dto.appointment.CreateAppointmentRequest;
 import com.flavio.appointment_booking_api.service.AppointmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/appointments")
+@Tag(name = "Appointments", description = "Appointment management endpoints")
 public class AppointmentController {
 
     private final AppointmentService service;
@@ -18,23 +23,29 @@ public class AppointmentController {
         this.service = service;
     }
 
+    @Operation(summary = "Create a new appointment")
     @PostMapping
-    public AppointmentResponse create(@RequestBody @Valid CreateAppointmentRequest request) {
-        return service.create(request);
+    public ResponseEntity<AppointmentResponse> create(@RequestBody @Valid CreateAppointmentRequest request) {
+        AppointmentResponse response = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "List authenticated user's appointments")
     @GetMapping("/me")
-    public List<AppointmentResponse> myAppointments() {
-        return service.myAppointments();
+    public ResponseEntity<List<AppointmentResponse>> myAppointments() {
+        return ResponseEntity.ok(service.myAppointments());
     }
 
+    @Operation(summary = "List all appointments (ADMIN only)")
     @GetMapping
-    public List<AppointmentResponse> all() {
-        return service.all();
+    public ResponseEntity<List<AppointmentResponse>> all() {
+        return ResponseEntity.ok(service.all());
     }
 
+    @Operation(summary = "Cancel an appointment")
     @DeleteMapping("/{id}")
-    public void cancel(@PathVariable Long id) {
+    public ResponseEntity<Void> cancel(@PathVariable Long id) {
         service.cancel(id);
+        return ResponseEntity.noContent().build();
     }
 }
